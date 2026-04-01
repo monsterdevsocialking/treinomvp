@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>PT Flow - Seu Personal Trainer Digital</title>
+    <style>
+        /* ---------- RESET & BASE (clean, sans-serif, espaçamento amplo) ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fa;  /* cinza muito claro, fundo suave */
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            line-height: 1.4;
+            color: #1e1f22;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* container principal com card clean */
+        .app-container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* conteúdo interno com padding generoso */
+        .card-inner {
+            padding: 2rem 2rem 2.5rem;
+        }
+
+        /* telas (sections) — controle de visibilidade */
+        .screen {
+            transition: opacity 0.2s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* tipografia e títulos */
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .headline {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #000;
+        }
+
+        .subhead {
+            font-size: 1rem;
+            color: #5a5e6a;
+            margin-bottom: 2rem;
+            border-left: 3px solid #d0d4dc;
+            padding-left: 1rem;
+        }
+
+        /* botões grandes, clean, preto/branco */
+        .btn-primary {
+            background: #000000;
+            color: white;
+            border: none;
+            padding: 1rem 1.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #2c2e31;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1.5px solid #d0d4dc;
+            color: #1e1f22;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 0.75rem;
+        }
+
+        .btn-secondary:hover {
+            background: #f2f4f8;
+            border-color: #b0b4be;
+        }
+
+        /* formulário com campos espaçados */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5a5e6a;
+            margin-bottom: 0.4rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            border: 1.5px solid #e2e6ec;
+            border-radius: 20px;
+            background: #ffffff;
+            font-family: inherit;
+            transition: 0.15s;
+            color: #1a1c20;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+        }
+
+        .row-2col {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .row-2col .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        /* cards de resultado */
+        .result-card {
+            background: #f8f9fc;
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #edf0f5;
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            color: #7c818f;
+            margin-bottom: 0.4rem;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000;
+            line-height: 1.2;
+        }
+
+        .result-sub {
+            font-size: 0.9rem;
+            color: #5a5e6a;
+            margin-top: 0.25rem;
+        }
+
+        .exercise-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .exercise-list li {
+            background: white;
+            margin-bottom: 0.6rem;
+            padding: 0.7rem 1rem;
+            border-radius: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid #eef2f7;
+        }
+
+        .exercise-list li::before {
+            content: "💪";
+            font-size: 1rem;
+        }
+
+        .meal-plan {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin-top: 0.8rem;
+            border-left: 4px solid #000;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: 0;
+            height: 1px;
+            background: #eef2f7;
+        }
+
+        /* espaçamento responsivo */
+        @media (max-width: 550px) {
+            .card-inner {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            .result-value {
+                font-size: 1.6rem;
+            }
+        }
+        .tagline {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #9aa0ab;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="card-inner">
+        <!-- TELA 1: BOAS-VINDAS / COMEÇAR -->
+        <div id="welcomeScreen" class="screen">
+            <h1>⚡ Descubra seu plano ideal<br>em 30 segundos</h1>
+            <div class="subhead">Treino personalizado + nutricional baseado nos seus dados. Resultado imediato e prático.</div>
+            <button id="startBtn" class="btn-primary">Começar →</button>
+            <div class="tagline">Sem complicação • CIÊNCIA SIMPLIFICADA</div>
+        </div>
+
+        <!-- TELA 2: FORMULÁRIO (dados do usuário) -->
+        <div id="formScreen" class="screen hidden">
+            <div class="headline">Seu perfil <span style="font-weight:400;">📋</span></div>
+            <div class="subhead">Preencha abaixo, é rápido e 100% privado.</div>
+            
+            <form id="userForm">
+                <!-- Nome opcional -->
+                <div class="form-group">
+                    <label>Nome (opcional)</label>
+                    <input type="text" id="name" placeholder="Como prefere ser chamado?" autocomplete="off">
+                </div>
+
+                <div class="row-2col">
+                    <div class="form-group">
+                        <label>Idade *</label>
+                        <input type="number" id="age" placeholder="Ex: 28" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <select id="gender">
+                            <option value="M">Masculino (M)</option>
+                            <option value="F">Feminino (F)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row-2col">
+                    <div class="form-group">
+                        <label>Peso (kg)</label>
+                        <input type="number" step="0.1" id="weight" placeholder="70" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Altura (cm)</label>
+                        <input type="number" id="height" placeholder="175" required>
+                    </div>
+                </div>
+
+                <div class="row-2col">
+                    <div class="form-group">
+                        <label>Objetivo</label>
+                        <select id="goal">
+                            <option value="emagrecer">Emagrecer / Definição</option>
+                            <option value="massa">Ganhar Massa Muscular</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nível</label>
+                        <select id="level">
+                            <option value="iniciante">Iniciante</option>
+                            <option value="intermediario">Intermediário</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 0.75rem;">Gerar meu plano →</button>
+                <button type="button" id="backToStart" class="btn-secondary">Voltar</button>
+            </form>
+        </div>
+
+        <!-- TELA 3: RESULTADO (plano personalizado + calorias + treino) -->
+        <div id="resultScreen" class="screen hidden">
+            <div class="headline" id="resultGreeting">✨ Seu plano personalizado</div>
+            <div class="subhead">Baseado nas suas metas e nível — veja os próximos passos</div>
+
+            <div class="result-card">
+                <div class="result-label">🍽️ CALORIAS DIÁRIAS RECOMENDADAS</div>
+                <div class="result-value" id="caloriesDisplay">--- kcal</div>
+                <div class="result-sub" id="calorieNote">Ajuste para seu objetivo</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label">📌 RESUMO DO PLANO DIÁRIO</div>
+                <div id="mealSummary" class="meal-plan">✅ Distribuição inteligente de macros</div>
+                <div id="macroHint" style="font-size:0.85rem; margin-top:0.75rem; color:#4a4f5e;"></div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label">🏋️‍♂️ SUGESTÃO DE TREINO (nível <span id="levelTag"></span>)</div>
+                <ul class="exercise-list" id="exerciseList">
+                    <li>Carregando...</li>
+                </ul>
+                <div style="font-size:0.75rem; margin-top:0.75rem; color:#7c818f;">* Série conceitual — consulte um profissional para ajustes.</div>
+            </div>
+
+            <button id="restartBtn" class="btn-primary" style="margin-top: 0.5rem;">Refazer meu plano</button>
+            <button id="backToFormFromResult" class="btn-secondary">Editar dados</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // LÓGICA PRINCIPAL - CÁLCULO TMB + AJUSTE OBJETIVO + TREINO PRÉ-PRONTO
+    // MVP funcional, rápido e que mostra valor de cara.
+    // ============================================================
+
+    // Função para calcular TMB usando equação de Mifflin-St Jeor (simplificada)
+    // Entrada: peso(kg), altura(cm), idade(anos), sexo ('M' ou 'F')
+    function calcularTMB(peso, altura, idade, sexo) {
+        // fórmula base: 10*peso + 6.25*altura - 5*idade + constante (5 para homens, -161 para mulheres)
+        let tmb;
+        if (sexo === 'M') {
+            tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + 5;
+        } else {
+            tmb = (10 * peso) + (6.25 * altura) - (5 * idade) - 161;
+        }
+        return Math.round(tmb);
+    }
+
+    // Ajuste calórico de acordo com objetivo e nível de atividade (consideramos um fator de atividade leve/moderado para demo)
+    // Para emagrecer: déficit de 20% sobre TMB * fator atividade (~1.2 sedentário/moderado)
+    // Para ganhar massa: superávit de 15% sobre TMB * fator atividade
+    // Vamos usar fator 1.2 como base para demonstrar conceito (pessoas comuns)
+    function calcularCaloriasRecomendadas(tmb, objetivo, nivel) {
+        let fatorAtividade = 1.2;   // leve/moderado (conceito)
+        let gastoTotal = Math.round(tmb * fatorAtividade);
+        let finalKcal;
+        if (objetivo === 'emagrecer') {
+            // déficit de 20% (ajuste seguro para perda de peso)
+            finalKcal = Math.round(gastoTotal * 0.8);
+        } else { // ganhar massa
+            // superávit de 15%
+            finalKcal = Math.round(gastoTotal * 1.15);
+        }
+        // garantir mínimo de 1400 kcal (segurança)
+        return Math.max(finalKcal, 1400);
+    }
+
+    // Plano diário resumido (texto simples e atrativo) baseado nas calorias e objetivo
+    function gerarPlanoResumo(calorias, objetivo, nomeUsuario) {
+        let baseText = "";
+        if (objetivo === 'emagrecer') {
+            baseText = `🥗 Foco em déficit controlado: aproximadamente ${calorias} kcal/dia. Priorize proteínas magras, vegetais e gorduras boas. Refeições a cada 3h para controle de fome.`;
+        } else {
+            baseText = `🍚 Superávit limpo: ${calorias} kcal/dia. Refeições ricas em carboidratos complexos, proteína de qualidade e gorduras saudáveis. Inclua pré e pós-treino.`;
+        }
+        // adiciona toque pessoal se nome foi informado
+        if (nomeUsuario && nomeUsuario.trim() !== "") {
+            baseText = `${nomeUsuario}, ${baseText.slice(0, 1).toLowerCase() + baseText.slice(1)}`;
+        }
+        return baseText;
+    }
+
+    // Gera lista de exercícios baseada no nível (iniciante ou intermediário)
+    // São listas pré-prontas que mostram valor de cara, com exercícios funcionais
+    function getExerciciosPorNivel(nivel, objetivo) {
+        // pequena variação pelo objetivo, mas mantém coerência (mais cardio se emagrecer, mais força se massa)
+        const isIniciante = (nivel === 'iniciante');
+        const isEmagrecer = (objetivo === 'emagrecer');
+
+        if (isIniciante) {
+            if (isEmagrecer) {
+                return [
+                    "Aquecimento: 5 min polichinelos",
+                    "Agachamento com peso corporal – 3x12",
+                    "Caminhada rápida / esteira 20 min",
+                    "Remada unilateral com elástico – 3x10 cada",
+                    "Prancha frontal 3x30s",
+                    "Alongamento final 5 min"
+                ];
+            } else {
+                // iniciante ganhar massa
+                return [
+                    "Aquecimento: mobilidade articular",
+                    "Agachamento livre (iniciante) – 3x10",
+                    "Flexão de braços apoiado – 3x8",
+                    "Rosca direta com halteres leves – 3x10",
+                    "Prancha isométrica – 3x20s",
+                    "Elevação pélvica – 3x12"
+                ];
+            }
+        } else { // intermediário
+            if (isEmagrecer) {
+                return [
+                    "HIIT: 20 min (30s sprint / 30s descanso)",
+                    "Agachamento búlgaro – 3x10 cada perna",
+                    "Supino reto com halteres – 4x8",
+                    "Remada curvada – 4x10",
+                    "Prancha dinâmica com toque ombro – 3x12",
+                    "Burpees 3x12 (explosivo)"
+                ];
+            } else {
+                return [
+                    "Supino inclinado – 4x8",
+                    "Levantamento terra romeno – 4x10",
+                    "Desenvolvimento militar – 4x8",
+                    "Barra fixa assistida ou graviton – 3x máx",
+                    "Mergulho em paralelas – 3x8",
+                    "Abdutora na polia – 3x12 cada"
+                ];
+            }
+        }
+    }
+
+    // Gerar dica de macros simplificada (valor agregado)
+    function gerarMacroHint(calorias, objetivo) {
+        let proteinas = Math.round(calorias * 0.3 / 4);   // 30% proteina / 4kcal
+        let gorduras = Math.round(calorias * 0.25 / 9);   // 25% gordura
+        let carboidratos = Math.round(calorias * 0.45 / 4);
+        if (objetivo === 'massa') {
+            proteinas = Math.round(calorias * 0.32 / 4);
+            carboidratos = Math.round(calorias * 0.48 / 4);
+        }
+        return `🔎 Macros estimadas: ${proteinas}g de proteína | ${carboidratos}g de carboidratos | ${gorduras}g de gorduras (valores aproximados).`;
+    }
+
+    // ========== CONTROLE DE FLUXO DAS TELAS ==========
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const formScreen = document.getElementById('formScreen');
+    const resultScreen = document.getElementById('resultScreen');
+
+    const startBtn = document.getElementById('startBtn');
+    const backToStart = document.getElementById('backToStart');
+    const restartBtn = document.getElementById('restartBtn');
+    const backToFormFromResult = document.getElementById('backToFormFromResult');
+    const userForm = document.getElementById('userForm');
+
+    // elementos do resultado dinâmico
+    const resultGreeting = document.getElementById('resultGreeting');
+    const caloriesDisplay = document.getElementById('caloriesDisplay');
+    const calorieNote = document.getElementById('calorieNote');
+    const mealSummary = document.getElementById('mealSummary');
+    const macroHintSpan = document.getElementById('macroHint');
+    const exerciseListUl = document.getElementById('exerciseList');
+    const levelTagSpan = document.getElementById('levelTag');
+
+    // Função para resetar telas e mostrar a desejada
+    function showScreen(screenName) {
+        welcomeScreen.classList.add('hidden');
+        formScreen.classList.add('hidden');
+        resultScreen.classList.add('hidden');
+        if (screenName === 'welcome') welcomeScreen.classList.remove('hidden');
+        if (screenName === 'form') formScreen.classList.remove('hidden');
+        if (screenName === 'result') resultScreen.classList.remove('hidden');
+    }
+
+    // Eventos de navegação
+    startBtn.addEventListener('click', () => {
+        showScreen('form');
+    });
+
+    backToStart.addEventListener('click', () => {
+        showScreen('welcome');
+        // opcional: limpar formulário (não obrigatório mas evita dados antigos)
+        document.getElementById('userForm').reset();
+    });
+
+    restartBtn.addEventListener('click', () => {
+        showScreen('welcome');
+    });
+
+    backToFormFromResult.addEventListener('click', () => {
+        showScreen('form');
+    });
+
+    // Submissão do formulário: validação básica, geração de resultado e exibição
+    userForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // captura valores
+        const nome = document.getElementById('name').value.trim();
+        const idade = parseInt(document.getElementById('age').value, 10);
+        const peso = parseFloat(document.getElementById('weight').value);
+        const altura = parseFloat(document.getElementById('height').value);
+        const sexo = document.getElementById('gender').value;   // 'M' ou 'F'
+        const objetivo = document.getElementById('goal').value; // 'emagrecer' ou 'massa'
+        const nivel = document.getElementById('level').value;   // 'iniciante' ou 'intermediario'
+
+        // validações básicas para dados obrigatórios (idade, peso, altura positivos)
+        if (isNaN(idade) || idade <= 0 || idade > 120) {
+            alert("Por favor, insira uma idade válida (1 a 120 anos).");
+            return;
+        }
+        if (isNaN(peso) || peso <= 20 || peso > 300) {
+            alert("Insira um peso válido (20 a 300 kg).");
+            return;
+        }
+        if (isNaN(altura) || altura <= 50 || altura > 260) {
+            alert("Insira uma altura válida (50 a 260 cm).");
+            return;
+        }
+
+        // CÁLCULOS
+        const tmb = calcularTMB(peso, altura, idade, sexo);
+        const caloriasRecomendadas = calcularCaloriasRecomendadas(tmb, objetivo, nivel);
+        
+        // Geração de textos de valor
+        let nomeApresentacao = nome && nome !== "" ? nome : "Atleta";
+        const planoResumo = gerarPlanoResumo(caloriasRecomendadas, objetivo, nomeApresentacao);
+        const macroDica = gerarMacroHint(caloriasRecomendadas, objetivo);
+        
+        // Lista de exercícios conforme nível e objetivo
+        const exercicios = getExerciciosPorNivel(nivel, objetivo);
+        
+        // Montagem da tela de resultado com tudo
+        resultGreeting.innerHTML = `✨ Olá, ${nomeApresentacao}! Seu plano sob medida`;
+        caloriesDisplay.innerHTML = `${caloriasRecomendadas} kcal`;
+        
+        let objetivoTexto = (objetivo === 'emagrecer') ? '🔥 DÉFICIT INTELIGENTE' : '💪 SUPERÁVIT LIMPO';
+        calorieNote.innerHTML = `Baseado na sua TMB (${tmb} kcal) + fator atividade + ${objetivo === 'emagrecer' ? 'déficit 20%' : 'superávit 15%'}. ${objetivoTexto}`;
+        
+        mealSummary.innerHTML = `<div style="font-weight:500;">📋 ${planoResumo}</div>`;
+        macroHintSpan.innerHTML = macroDica;
+        
+        // Preencher lista de exercícios
+        exerciseListUl.innerHTML = '';
+        exercicios.forEach(ex => {
+            const li = document.createElement('li');
+            li.textContent = ex;
+            exerciseListUl.appendChild(li);
+        });
+        
+        // Atualizar tag de nível visual
+        let nivelDisplay = (nivel === 'iniciante') ? 'Iniciante 🧘' : 'Intermediário 🔥';
+        levelTagSpan.innerHTML = nivelDisplay;
+        
+        // Exibir tela de resultado
+        showScreen('result');
+    });
+
+    // Extra: tratamento básico para garantir que campos de número não fiquem vazios ao enviar
+    // já validados acima. Tudo funcional e pronto.
+    // Bônus: para maior fluidez, se o usuário clicar em "Editar dados", mantemos os valores preenchidos (opcional)
+    // Mas o reset do form não apaga propositalmente para boa experiência.
+    // (Nenhum dado sensível é armazenado, só demonstração)
+</script>
+</body>
+</html>
